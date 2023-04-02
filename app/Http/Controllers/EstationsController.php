@@ -8,47 +8,43 @@ use Illuminate\Support\Facades\DB;
 
 class EstationsController extends Controller
 {
+    public function index()
+    {
+        $stations = Estations::all();
+        return view('estations.index', compact('stations'));
+    }
+
+    public function create()
+    {
+        return view('/estations/create');
+    }
     public function store(Request $request)
     {
+
+        // validate the input
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'is_open' => 'required|boolean'
+            'name' => 'required',
+            'city' => 'required',
+            'address' => 'required',
+            'latitude' => 'required',
+            'longitude' => 'required',
+            'is_open' => 'boolean',
         ]);
 
-        $estation = Estations::create($validatedData);
 
-        return response()->json([
-            'message' => 'E-station created successfully',
-            'data' => $estation
-        ], 201);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $validatedData = $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'city' => 'sometimes|required|string|max:255',
-            'address' => 'sometimes|required|string|max:255',
-            'is_open' => 'sometimes|required|boolean',
-            'latitude' => 'sometimes|required|numeric',
-            'longitude' => 'sometimes|required|numeric',
-        ]);
-
-        $estation = Estations::find($id);
-        if (!$estation) {
-            return response()->json(['message' => 'E-station not found'], 404);
+        try {
+            // create a new estation with the validated data
+            $estation = new Estations($validatedData);
+            $estation->save();
+        } catch (\Exception $e) {
+            // redirect to the index page with an error message
+            return redirect('/estations/create')->with('error', 'There was an error creating the station.');
         }
 
-        $estation->fill($validatedData);
-        $estation->save();
-
-        return response()->json([
-            'message' => 'E-station updated successfully',
-            'data' => $estation
-        ]);
+        // redirect to the index page with a success message
+        return redirect('/estations/create')->with('success', 'Station created successfully.');
     }
+
 
     public function destroy($id)
     {
@@ -98,15 +94,7 @@ class EstationsController extends Controller
             'data' => $estations
         ]);
     }
-    public function index()
-    {
-        $stationCount = Estations::all()->count();
-        $cities = Estations::distinct('city')->pluck('city');
-        $openCount = Estations::where('status', 'open')->count();
-        $closestStation = Estations::where('status', 'open')->orderBy('distance')->first();
 
-        return view('main', compact('stationCount', 'cities', 'openCount', 'closestStation'));
-    }
 
 }
 
