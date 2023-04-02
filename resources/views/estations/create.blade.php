@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="max-w-lg mx-auto my-10">
-        <h1 class="text-center font-bold text-2xl mb-5">Create a new station</h1>
+        <h1 class="text-center font-bold text-2xl mb-5 ">Create a new station</h1>
         <form action="{{ route('estations.store') }}" method="POST" class="bg-white p-6 rounded-lg shadow-md">
             @csrf
             <x-form.input name="name" label="Name:" placeholder="Enter name of station" />

@@ -10,8 +10,8 @@ class EstationsController extends Controller
 {
     public function index()
     {
-        $stations = Estations::all();
-        return view('estations.index', compact('stations'));
+        $estations = Estations::all();
+        return view('estations.index', compact('estations'));
     }
 
     public function create()
@@ -20,7 +20,6 @@ class EstationsController extends Controller
     }
     public function store(Request $request)
     {
-
         // validate the input
         $validatedData = $request->validate([
             'name' => 'required',
@@ -31,7 +30,6 @@ class EstationsController extends Controller
             'is_open' => 'boolean',
         ]);
 
-
         try {
             // create a new estation with the validated data
             $estation = new Estations($validatedData);
@@ -40,21 +38,43 @@ class EstationsController extends Controller
             // redirect to the index page with an error message
             return redirect('/estations/create')->with('error', 'There was an error creating the station.');
         }
-
         // redirect to the index page with a success message
         return redirect('/estations/create')->with('success', 'Station created successfully.');
     }
 
+    public function edit($id)
+    {
+        $estation = Estations::findOrFail($id);
+        return view('estations.edit', compact('estation'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $estation = Estations::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'name' => 'required|max:255',
+            'city' => 'required|max:255',
+            'address' => 'required|max:255',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'is_open' => 'required|boolean'
+        ]);
+
+        $estation->update($validatedData);
+        return redirect()->route('estations.index')
+            ->with('success', 'Estation updated successfully');
+    }
 
     public function destroy($id)
     {
         $estation = Estations::findOrFail($id);
         $estation->delete();
 
-        return response()->json([
-            'message' => 'E-station deleted successfully'
-        ], 200);
+        return redirect()->route('estations.index')
+            ->with('success', 'Station has been deleted.');
     }
+
 
     public function getByCity($city)
     {
@@ -92,6 +112,20 @@ class EstationsController extends Controller
 
         return response()->json([
             'data' => $estations
+        ]);
+    }
+
+    protected function validateEstations(?Estations $estation = null): array
+    {
+        $estation ??= new Estations();
+
+        return request()->validate([
+            'name' => 'required|max:255',
+            'city' => 'required|max:255',
+            'address' => 'required|max:255',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'is_open' => 'required|boolean'
         ]);
     }
 
