@@ -17,7 +17,8 @@ class EstationsFactory extends Factory
             'address' => $this->faker->address,
             'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,
-            'is_open' => $this->faker->boolean,
+            'opening_hours' => $this->faker->time('H:i'),
+            'closing_hours' => $this->faker->time('H:i'),
         ];
     }
 }

@@ -13,25 +13,23 @@
 
 <body class="bg-gray-100">
 <nav class="bg-blue-500">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between h-16">
-            <div class="flex items-center">
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-4">
-                        <a href="{{ route('estations.show') }}" class="px-3 py-2 rounded-md text-sm font-medium text-white {{ Request::is('estations') ? 'bg-blue-900' : '' }} hover:bg-blue-700 hover:text-white">All Estations</a>
-                        <a href="{{ route('estations.create') }}" class="px-3 py-2 rounded-md text-sm font-medium text-white {{ Request::is('estations/create') ? 'bg-blue-900' : '' }} hover:bg-blue-700 hover:text-white">Create Estation</a>
-                        <form action="{{ route('estations.filter') }}" method="GET" class="flex items-center">
-                            <label for="city" class="text-white text-sm mr-2">Enter a City Name:</label>
-                            <div class="relative flex">
-                                <input type="text" name="city" id="city" class="block w-full mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm py-1.5 pr-3 pl-10 placeholder-gray-400" placeholder="Search">
-                                <button type="submit" class="absolute right-0 top-0 mt-1.5 mr-1.5 px-4 py-1.5 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-blue-600 hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
-                                    Filter
-                                </button>
-                            </div>
-                        </form>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div class="flex items-center justify-between w-full h-16">
+            <a href="{{ route('estations.show') }}" class="px-3 py-2 rounded-md text-sm font-medium text-white {{ Request::is('estations') ? 'bg-blue-900' : '' }} hover:bg-blue-700 hover:text-white">All Estations</a>
+            <a href="{{ route('estations.create') }}" class="px-3 py-2 rounded-md text-sm font-medium text-white {{ Request::is('estations/create') ? 'bg-blue-900' : '' }} hover:bg-blue-700 hover:text-white">Create Estation</a>
+            <form action="{{ route('estations.filter') }}" method="GET" class="flex items-center ml-4">
+                <label for="city" class="text-white text-sm mr-2">Enter a City Name:</label>
+                <div class="relative flex items-center">
+                    <input type="text" name="city" id="city" class="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm py-1 px-2 placeholder-gray-400" placeholder="Search">
+                    <div class="flex items-center ml-2">
+                        <input type="checkbox" id="is_open" name="is_open" value="true" {{ request()->input('is_open') == 'true' ? 'checked' : '' }}>
+                        <label for="is_open" class="text-white text-sm ml-1">Open stations only</label>
                     </div>
+                    <button type="submit" class="ml-2 px-4 py-1.5 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-blue-600 hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
+                        Filter
+                    </button>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 </nav>
