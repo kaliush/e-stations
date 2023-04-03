@@ -24,6 +24,9 @@ Route::get('/estations/filter', [EstationsController::class, 'filter'])->name('e
 
 
 Route::get('/estations/city/{city}/open', [EstationsController::class, 'openByCity']);
-Route::get('/estations/closest', [EstationsController::class, 'getClosestOpen']);
+Route::get('/estations/closest/{latitude}/{longitude}', [EstationsController::class, 'getClosestOpen'])->name('estations.closest');
+Route::get('/estations/search', [EstationsController::class, 'search'])->name('estations.search');
+
+
 
 

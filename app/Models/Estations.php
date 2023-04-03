@@ -43,7 +43,7 @@ class Estations extends Model
         return $estation;
     }
 
-    public function isOpen()
+    public function isOpen(): bool
     {
         if ($this->opening_hours === null || $this->closing_hours === null) {
             return false;
@@ -69,6 +69,18 @@ class Estations extends Model
 
         // If the station is open during the same day, check if the current time is between opening time and closing time
         return $now->between($openingTime, $closingTime);
+    }
+    public static function haversine($lat1, $lon1, $lat2, $lon2) {
+        $earth_radius = 6371; // km
+
+        $d_lat = deg2rad($lat2 - $lat1);
+        $d_lon = deg2rad($lon2 - $lon1);
+
+        $a = sin($d_lat / 2) * sin($d_lat / 2) + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($d_lon / 2) * sin($d_lon / 2);
+        $c = 2 * atan2(sqrt($a), sqrt(1 - $a));
+        $distance = $earth_radius * $c;
+
+        return $distance;
     }
 
 }

@@ -18,23 +18,33 @@
             <a href="{{ route('estations.show') }}" class="px-3 py-2 rounded-md text-sm font-medium text-white {{ Request::is('estations') ? 'bg-blue-900' : '' }} hover:bg-blue-700 hover:text-white">All Estations</a>
             <a href="{{ route('estations.create') }}" class="px-3 py-2 rounded-md text-sm font-medium text-white {{ Request::is('estations/create') ? 'bg-blue-900' : '' }} hover:bg-blue-700 hover:text-white">Create Estation</a>
             <form action="{{ route('estations.filter') }}" method="GET" class="flex items-center ml-4">
-                <label for="city" class="text-white text-sm mr-2">Enter a City Name:</label>
+                <label for="city" class="text-white text-sm mr-2">Find a Station in:</label>
                 <div class="relative flex items-center">
-                    <input type="text" name="city" id="city" class="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm py-1 px-2 placeholder-gray-400" placeholder="Search">
+                    <input type="text" name="city" id="city" class="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm py-1 px-2 placeholder-gray-400" placeholder="City Name">
                     <div class="flex items-center ml-2">
                         <input type="checkbox" id="is_open" name="is_open" value="true" {{ request()->input('is_open') == 'true' ? 'checked' : '' }}>
-                        <label for="is_open" class="text-white text-sm ml-1">Open stations only</label>
+                        <label for="is_open" class="text-white text-sm ml-1">Open Only</label>
                     </div>
-                    <button type="submit" class="ml-2 px-4 py-1.5 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-blue-600 hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:border-blue-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
-                        Filter
+                    <button type="submit" class="ml-2 px-4 py-1.5 rounded-md font-medium text-sm text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Find
+                    </button>
+                </div>
+            </form>
+            <form action="{{ route('estations.search') }}" method="GET" class="flex items-center ml-4">
+                <label for="latitude" class="text-white text-sm mr-2">Find Nearby Stations:</label>
+                <div class="relative flex items-center">
+                    <input type="text" name="latitude" id="latitude" class="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm py-1 px-2 placeholder-gray-400" placeholder="Latitude" required>
+                    <label for="longitude" class="sr-only">Longitude</label>
+                    <input type="text" name="longitude" id="longitude" class="block mt-1 rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 text-sm py-1 px-2 placeholder-gray-400" placeholder="Longitude" required>
+                    <button type="submit" class="ml-2 px-4 py-1.5 rounded-md font-medium text-sm text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Find
                     </button>
                 </div>
             </form>
         </div>
     </div>
 </nav>
-
-<div class="py-10">
+                <div class="py-10">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
         @yield('content')
     </div>

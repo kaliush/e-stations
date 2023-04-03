@@ -32,6 +32,7 @@ class EstationsController extends Controller
     {
         return view('/estations/create');
     }
+
     public function store(Request $request)
     {
         // validate the input
@@ -97,6 +98,7 @@ class EstationsController extends Controller
         return redirect()->route('estations.show')
             ->with('success', 'Station has been deleted.');
     }
+
     public function filter(Request $request)
     {
         $selected_city = $request->input('city');
@@ -132,5 +134,51 @@ class EstationsController extends Controller
             'selected_city' => $selected_city
         ]);
     }
+
+    public function getClosestOpen($latitude, $longitude)
+    {
+        $estations = Estations::all();
+        $closestEstation = null;
+        $minDistance = INF;
+
+        foreach ($estations as $estation) {
+            if ($estation->isOpen()) {
+                $distance = Estations::haversine($latitude, $longitude, $estation->latitude, $estation->longitude);
+                if ($distance < $minDistance) {
+                    $minDistance = $distance;
+                    $closestEstation = $estation;
+                }
+            }
+        }
+
+        $data = [
+            'closestEstation' => $closestEstation ? json_decode($closestEstation->toJson()) : null,
+            'distance' => $distance
+        ];
+
+        return view('closest-estation', $data);
+    }
+
+    public function search(Request $request)
+    {
+        $latitude = $request->input('latitude');
+        $longitude = $request->input('longitude');
+
+        $validatedData = $request->validate([
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
+        ], [
+            'latitude.required' => 'Please enter a latitude value.',
+            'latitude.numeric' => 'The latitude must be a numeric value.',
+            'latitude.between' => 'The latitude must be between -90 and 90.',
+            'longitude.required' => 'Please enter a longitude value.',
+            'longitude.numeric' => 'The longitude must be a numeric value.',
+            'longitude.between' => 'The longitude must be between -180 and 180.',
+        ]);
+
+
+        return redirect()->route('estations.closest', ['latitude' => $latitude, 'longitude' => $longitude]);
+    }
+
 }
 
