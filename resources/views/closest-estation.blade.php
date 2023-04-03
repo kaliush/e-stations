@@ -15,7 +15,7 @@
                             <p class="text-gray-700 text-base">Closing hours: {{ $closestEstation->closing_hours }}</p>
                         </div>
                         <div class="w-1/2">
-                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ $closestEstation->latitude }},{{ $closestEstation->longitude }}&markers=color:red%7Clabel:S%7C{{ $closestEstation->latitude }},{{ $closestEstation->longitude }}&zoom=14&size=400x400&key=IzaSyB1gYqI8OdG1ZdutEci6A3T57kI60EyNLo" alt="Map showing the location of the station">
+                            <img src="https://maps.googleapis.com/maps/api/staticmap?center={{ $closestEstation->latitude }},{{ $closestEstation->longitude }}&markers=color:red%7Clabel:S%7C{{ $closestEstation->latitude }},{{ $closestEstation->longitude }}&zoom=14&size=400x400&key=AIzaSyCCh1hAAQ3OXZBDlgnM8RHEDc1Ivb_sSuU˚" alt="Map showing the location of the station">
                         </div>
                     </div>
                     <p class="text-gray-700 text-base mb-2">Distance: {{ $distance }} km</p>
