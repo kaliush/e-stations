@@ -56,7 +56,7 @@
                         </span>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <a href="{{ route('estations.destroy', ['id' => $estation->id]) }} " class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
+                            <a href="{{ route('estations.edit', ['estation' => $estation->id]) }}" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-900 focus:outline-none focus:border-indigo-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M5.293 14.707a1 1 0 0 1-1.414-1.414l6-6a1 1 0 0 1 1.414 0l2.293 2.293a1 1 0 0 1 0 1.414l-6 6a1 1 0 0 1-1.414 0zM13 7.414L10.586 5H13v2.414z" clip-rule="evenodd" />
                                 </svg>
@@ -64,12 +64,18 @@
                             </a>
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                            <form id="delete-form" action="{{ route('estations.destroy', ['id' => $estation->id]) }}" method="POST">
+                            <form id="delete-form" action="{{ route('estations.destroy', ['id' => $estation->id]) }}"
+                                  method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-red-600 hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150" onclick="return confirmDelete()">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M6 8v8a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2zm6-2V5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v1H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-6h1a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2zm-4 0h2v1h-2V6zM8 8v8h4V8H8z" clip-rule="evenodd" />
+                                <button type="submit"
+                                        class="inline-flex items-center px-4 py-2 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest bg-red-600 hover:bg-red-700 active:bg-red-900 focus:outline-none focus:border-red-900 focus:shadow-outline-gray disabled:opacity-25 transition ease-in-out duration-150"
+                                        onclick="return confirmDelete()">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20"
+                                         fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                              d="M6 8v8a2 2 0 0 0 2 2h4a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2zm6-2V5a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v1H4a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h1v6a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2v-6h1a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2zm-4 0h2v1h-2V6zM8 8v8h4V8H8z"
+                                              clip-rule="evenodd"/>
                                     </svg>
                                     Delete
                                 </button>
@@ -80,9 +86,7 @@
                                     return confirm("Are you sure you want to delete this E-station?");
                                 }
                             </script>
-
                         </td>
-
                     </tr>
                 @endforeach
                 </tbody>

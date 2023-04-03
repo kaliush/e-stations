@@ -8,10 +8,10 @@ use Illuminate\Support\Facades\DB;
 
 class EstationsController extends Controller
 {
-    public function index()
+    public function show()
     {
         $estations = Estations::all();
-        return view('estations.index', compact('estations'));
+        return view('estations.show', compact('estations'));
     }
 
     public function create()
@@ -62,7 +62,7 @@ class EstationsController extends Controller
         ]);
 
         $estation->update($validatedData);
-        return redirect()->route('estations.index')
+        return redirect()->route('estations.show')
             ->with('success', 'Estation updated successfully');
     }
 
@@ -71,17 +71,24 @@ class EstationsController extends Controller
         $estation = Estations::findOrFail($id);
         $estation->delete();
 
-        return redirect()->route('estations.index')
+        return redirect()->route('estations.show')
             ->with('success', 'Station has been deleted.');
     }
 
 
-    public function getByCity($city)
+    public function filter(Request $request)
     {
-        $estations = Estations::where('city', $city)->get();
+        $selected_city = $request->input('city');
 
-        return response()->json([
-            'data' => $estations
+        $estations = Estations::where('city', $selected_city)->get();
+
+        if ($estations->count() == 0) {
+            return back()->with('error', 'No stations in the city yet.');
+        }
+
+        return view('estations.show', [
+            'estations' => $estations,
+            'selected_city' => $selected_city
         ]);
     }
 

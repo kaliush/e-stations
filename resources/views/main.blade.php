@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layouts.app')
 
 @section('title', 'E-Stations - Ukraine')
 
@@ -14,18 +14,6 @@
             <a href="{{ route('estations.create') }}" class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-full">
                 Add a New Station
             </a>
-
-            <a href="{{ route('estations.edit', ['id' => $estation->id]) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-6 rounded-full">
-                Update a Station
-            </a>
-
-            <form id="delete-form" action="#" method="POST" style="display: none;">
-                @csrf
-                @method('DELETE')
-            </form>
-            <button class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-6 rounded-full" onclick="event.preventDefault();document.getElementById('delete-form').submit();">
-                Delete a Station
-            </button>
 
             <a href="#" class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-6 rounded-full">
                 Open Stations in Kiev
