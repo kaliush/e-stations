@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 
 class Estations extends Model
 {
@@ -49,27 +48,27 @@ class Estations extends Model
         if ($this->opening_hours === null || $this->closing_hours === null) {
             return false;
         }
+
         $now = Carbon::now();
         $openingTime = Carbon::createFromFormat('H:i', $this->opening_hours);
         $closingTime = Carbon::createFromFormat('H:i', $this->closing_hours);
 
-        if ($closingTime < $openingTime) {
-            // If closing time is less than opening time, it means the station is open
-            // after midnight and we need to add a day to the closing time
+        // If closing time is less than or equal to opening time, it means the station is open
+        // after midnight and we need to add a day to the closing time
+        if ($closingTime->lte($openingTime)) {
             $closingTime->addDay();
         }
 
-        $isOpen = $now->between($openingTime, $closingTime);
+        // If the station is open past midnight, check if the current time is between opening time and midnight,
+        // or between midnight and closing time
+        if ($closingTime->day > $openingTime->day) {
+            $isBetweenMidnightAndClosingTime = $now->between(Carbon::createFromFormat('Y-m-d H:i', $closingTime->format('Y-m-d').' 00:00'), $closingTime);
+            $isBetweenOpeningTimeAndMidnight = $now->between($openingTime, Carbon::createFromFormat('Y-m-d H:i', $openingTime->format('Y-m-d').' 23:59'));
+            return $isBetweenMidnightAndClosingTime || $isBetweenOpeningTimeAndMidnight;
+        }
 
-        // Debug information
-        Log::debug('isOpen() called for station ' . $this->id);
-        Log::debug('Opening time: ' . $openingTime->format('H:i'));
-        Log::debug('Closing time: ' . $closingTime->format('H:i'));
-        Log::debug('Current time: ' . $now->format('H:i'));
-        Log::debug('Is open? ' . ($isOpen ? 'Yes' : 'No'));
-
-        return $isOpen;
+        // If the station is open during the same day, check if the current time is between opening time and closing time
+        return $now->between($openingTime, $closingTime);
     }
-
 
 }
