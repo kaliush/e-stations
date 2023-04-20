@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('address');
             $table->float('latitude');
             $table->float('longitude');
-            $table->boolean('is_open')->default(false);
+            $table->time('opening_hours');
+            $table->time('closing_hours');
             $table->timestamps();
         });
     }

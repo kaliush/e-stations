@@ -2,12 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Estations;
+use App\Models\Station;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class EstationsFactory extends Factory
+class StationsFactory extends Factory
 {
-    protected $model = Estations::class;
+    protected $model = Station::class;
 
     public function definition()
     {
