@@ -6,7 +6,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class NearestOpenStationRequest extends FormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'latitude' => ['required', 'numeric', 'min:-90', 'max:90'],

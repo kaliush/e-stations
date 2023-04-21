@@ -5,14 +5,9 @@ use App\Dto\CreateStationDto;
 use App\Dto\UpdateStationDto;
 use App\Models\Station;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class StationRepository
 {
-    public function findById(int $id): ?Station
-    {
-        return Station::find($id);
-    }
 
     public function create(CreateStationDto $data): ?Station
     {
@@ -48,13 +43,7 @@ class StationRepository
 
     public function getById(int $id): ?Station
     {
-        $station = Station::find($id);
-
-        if (!$station) {
-            throw new ModelNotFoundException('Station not found');
-        }
-
-        return $station;
+        return Station::findOrFail($id);
     }
 
     public function getAll(): Collection

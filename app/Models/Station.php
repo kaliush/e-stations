@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Carbon;
 
 /**
@@ -52,17 +51,6 @@ class Station extends Model
         'closing_hours'
     ];
 
-
-    public static function create(array $validatedData)
-    {
-        return self::query()->create($validatedData);
-    }
-
-    public static function find($id)
-    {
-        return self::where('id', $id)->first();
-    }
-
     public function isOpen(): bool
     {
         if ($this->opening_hours === null || $this->closing_hours === null) {
@@ -74,7 +62,7 @@ class Station extends Model
         $closingTime = Carbon::createFromFormat('H:i', $this->closing_hours);
 
         // If closing time is less than or equal to opening time, it means the station is open
-        // after midnight and we need to add a day to the closing time
+        // after midnight, and we need to add a day to the closing time
         if ($closingTime->lte($openingTime)) {
             $closingTime->addDay();
         }
@@ -91,68 +79,14 @@ class Station extends Model
         return $now->between($openingTime, $closingTime);
     }
 
-    /**
-     * @return string
-     */
     public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCity(): string
-    {
-        return $this->city;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAddress(): string
-    {
-        return $this->address;
-    }
-
-    /**
-     * @return float
-     */
-    public function getLatitude(): float
-    {
-        return $this->latitude;
-    }
-
-    /**
-     * @return float
-     */
-    public function getLongitude(): float
-    {
-        return $this->longitude;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getOpeningHours(): ?string
-    {
-        return $this->opening_hours;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getClosingHours(): ?string
-    {
-        return $this->closing_hours;
     }
 
 }

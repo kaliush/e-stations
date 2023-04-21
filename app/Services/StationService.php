@@ -2,8 +2,6 @@
 
 namespace App\Services;
 
-use App\Dto\CreateStationDto;
-use App\Dto\UpdateStationDto;
 use App\Http\Requests\CreateStationRequest;
 use App\Http\Requests\UpdateStationRequest;
 use App\Models\Station;
@@ -11,25 +9,23 @@ use App\Repositories\StationRepository;
 use Illuminate\Database\Eloquent\Collection;
 
 
-class StationService
+readonly class StationService
 {
-    private StationRepository $repository;
-
-    public function __construct(StationRepository $repository)
+    public function __construct(private StationRepository $repository)
     {
-        $this->repository = $repository;
     }
+
 
     public function create(CreateStationRequest $request): ?Station
     {
-        $data = new CreateStationDto($request->validated());
+        $data = $request->validatedDto();
 
         return $this->repository->create($data);
     }
 
     public function update(UpdateStationRequest $request, Station $station): bool
     {
-        $data = new UpdateStationDto($request->validated());
+        $data = $request->toDto();
 
         return $this->repository->update($station, $data);
     }
@@ -44,24 +40,19 @@ class StationService
         return $this->repository->getById($id);
     }
 
-    public function getAll(): Collection
+    public function getStations(?string $city = null, ?bool $isOpen = null): Collection
     {
-        return $this->repository->getAll();
-    }
+        if ($city !== null && $isOpen !== null) {
+            $stations = $this->repository->getOnlyOpenByCity($city);
+        } elseif ($city !== null) {
+            $stations = $this->repository->getByCity($city);
+        } elseif ($isOpen !== null) {
+            $stations = $this->repository->getOnlyOpen();
+        } else {
+            $stations = $this->repository->getAll();
+        }
 
-    public function getByCity(string $city): Collection
-    {
-        return $this->repository->getByCity($city);
-    }
-
-    public function getOnlyOpen(): Collection
-    {
-        return $this->repository->getOnlyOpen();
-    }
-
-    public function getOnlyOpenByCity(string $city): Collection
-    {
-        return $this->repository->getOnlyOpenByCity($city);
+        return $stations;
     }
 
     public function findNearestOpenStation(float $latitude, float $longitude): ?Station
@@ -90,8 +81,6 @@ class StationService
         $distance = acos($distance);
         $distance = rad2deg($distance);
         $distance = $distance * 60 * 1.1515;
-        $distance = $distance * 1.609344;
-
-        return $distance;
+        return $distance * 1.609344;
     }
 }

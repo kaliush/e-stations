@@ -2,23 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Dto\UpdateStationDto;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateStationRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
-    public function authorize(): bool
-    {
-        return true;
-    }
 
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
-     */
     public function rules(): array
     {
         return [
@@ -30,5 +19,18 @@ class UpdateStationRequest extends FormRequest
             'opening_hours' => 'required|date_format:H:i',
             'closing_hours' => 'required|date_format:H:i',
         ];
+    }
+
+    public function toDto(): UpdateStationDto
+    {
+        return new UpdateStationDto(
+            name: $this->input('name'),
+            city: $this->input('city'),
+            address: $this->input('address'),
+            latitude: $this->input('latitude'),
+            longitude: $this->input('longitude'),
+            opening_hours: $this->input('opening_hours'),
+            closing_hours: $this->input('closing_hours')
+        );
     }
 }

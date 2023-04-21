@@ -21,7 +21,7 @@ Route::patch('/{id}/update', [StationController::class, 'update'])->name('statio
 
 Route::delete('/{id}/delete', [StationController::class, 'destroy'])->name('stations.delete');
 
-Route::get('/nearest', [StationController::class, 'getNearestOpenStation'])->name('stations.nearest');
+Route::get('/nearest', [StationController::class, 'nearestOpen'])->name('stations.nearest');
 
 
 

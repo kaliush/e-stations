@@ -2,72 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\CreateStationRequest;
-use App\Http\Requests\NearestOpenStationRequest;
-use App\Http\Requests\ShowStationRequest;
-use App\Http\Requests\UpdateStationRequest;
-use App\Models\Station;
-use App\Services\stationService;
-use Exception;
-use Illuminate\Support\Facades\Log;
-
+    use App\Http\Requests\CreateStationRequest;
+    use App\Http\Requests\NearestOpenStationRequest;
+    use App\Http\Requests\ShowStationRequest;
+    use App\Http\Requests\UpdateStationRequest;
+    use App\Models\Station;
+    use App\Services\StationService;
+    use Exception;
+    use Illuminate\Http\RedirectResponse;
+    use Illuminate\Support\Facades\Log;
+    use Illuminate\View\View;
 
 class StationController extends Controller
 {
-
-    public function show(ShowStationRequest $request, StationService $stationService)
+    public function show(ShowStationRequest $request, StationService $stationService): View
     {
-        $city = $request->input('city');
-        $isOpen = $request->input('isOpen');
+        $stations = $stationService->getStations(
+            city: $request->input('city'),
+            isOpen: $request->input('isOpen')
+        );
 
-        if ($city !== null && $isOpen !== null) {
-            $stations = $stationService->getOnlyOpenByCity($city);
-        } elseif ($city !== null) {
-            $stations = $stationService->getByCity($city);
-        } elseif ($isOpen !== null) {
-            $stations = $stationService->getOnlyOpen();
-        } else {
-            $stations = $stationService->getAll();
-        }
-
-        return view('stations.show', ['stations' => $stations]);
+        return view('stations.show', compact('stations'));
     }
 
-    public function create()
+    public function create(): View
     {
         return view('stations.create');
     }
 
-    public function store(CreateStationRequest $request, StationService $stationService)
+    public function store(CreateStationRequest $request, StationService $stationService): RedirectResponse
     {
         $station = $stationService->create($request);
 
         if ($station) {
-            return redirect()->route('stations.show', $station->id)->with('Station created successfully.');
+            return redirect()->route('stations.show', $station->id)->with('success', 'Station created successfully.');
         } else {
             return back()->withInput()->withErrors(['Unable to create station.']);
         }
     }
 
-    public function edit($id, StationService $stationService)
+    public function edit(int $id, StationService $stationService)
     {
         try {
             $station = $stationService->getById($id);
-            return view('stations.edit', ['station' => $station]);
+            return view('stations.edit', compact('station'));
         } catch (Exception $e) {
             Log::error($e->getMessage());
-            return redirect('/show')->with('error', 'There was an error editing the station.');
+            return redirect()->route('stations.show')->with('error', 'There was an error editing the station.');
         }
     }
 
-    public function update($id, UpdateStationRequest $request, StationService $stationService)
+    public function update($id, UpdateStationRequest $request, StationService $stationService): RedirectResponse
     {
         $station = $stationService->getById($id);
+
         if (!$station) {
             return redirect()->route('stations.show')->withErrors(['error' => 'Station not found']);
         }
 
         $success = $stationService->update($request, $station);
+
         if (!$success) {
             return redirect()->back()->withErrors(['error' => 'Failed to update station']);
         }
@@ -75,7 +69,7 @@ class StationController extends Controller
         return redirect()->route('stations.show')->with('success', 'Station updated successfully');
     }
 
-    public function destroy($id)
+    public function destroy($id): RedirectResponse
     {
         $station = Station::findOrFail($id);
         $station->delete();
@@ -84,12 +78,12 @@ class StationController extends Controller
             ->with('success', 'Station has been deleted.');
     }
 
-    public function getNearestOpenStation(NearestOpenStationRequest $request, StationService $stationService)
+    public function nearestOpen(NearestOpenStationRequest $request, StationService $stationService)
     {
-        $latitude = $request->input('latitude');
-        $longitude = $request->input('longitude');
-
-        $station = $stationService->findNearestOpenStation($latitude, $longitude);
+        $station = $stationService->findNearestOpenStation(
+            latitude: $request->input('latitude'),
+            longitude: $request->input('longitude')
+        );
 
         if (!$station) {
             return redirect()->back()
@@ -100,4 +94,5 @@ class StationController extends Controller
         return view('stations.nearest-open', compact('station'));
     }
 }
+
 
